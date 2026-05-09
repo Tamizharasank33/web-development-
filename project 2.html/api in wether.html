@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+          /* Global reset and base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Heading */
+h1 {
+    font-style:italic;
+    margin-bottom: 10px;
+    margin-top: 60px;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #222;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* Input + Button container */
+input[type="text"] {
+    margin-top: 10;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 280px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #0078d7;
+    box-shadow: 0 0 8px rgba(0,120,215,0.4);
+    outline: none;
+}
+
+button {
+    gap: 25px;
+    margin-top: 10px;
+    padding: 12px 20px;
+    margin-left: 10px;
+    background-color: #0078d7;
+    color: #fff;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #005a9e;
+    transform: translateY(-2px);
+}
+
+
+.weather {
+    margin-top: 40px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    padding: 25px;
+    width: 100%;
+    max-width: 420px;
+    transition: transform 0.3s ease;
+}
+
+.weather:hover {
+    transform: scale(1.02);
+}
+
+.weather mark {
+    background: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.weather p {
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    input[type="text"] {
+        width: 200px;
+    }
+    button {
+        margin-top: 10px;
+        width: 100%;
+    }
+    .weather {
+        padding: 20px;
+    }
+}
+</style>
+</head>
+<body>
+    <h1>Weather app</h1>
+    <input type="text" id="areaInput" placeholder="Enter Area Name">
+    
+    <button onclick="handleSearch()">Search area</button>
+
+    <div class="weather" id="wether">
+         <mark>Details:</mark>
+    </div>
+
+
+    <script>
+    async function getWeather(area) {
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${area}&appid=5d493f7100f6d064c4764090b66c6d5c&units=metric`;
+        try {
+            let response = await fetch(url);
+            let data = await response.json();
+
+            if (data.cod === 200) {
+                const weatherContainer = document.getElementById("wether");
+                weatherContainer.innerHTML = `
+                    <p><strong>Area:</strong> ${data.name}</p>
+                    <p><strong>Temperature:</strong> ${data.main.temp} °C</p>
+                    <p><strong>Weather:</strong> ${data.weather[0].description}</p>
+                    <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
+                    <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
+                    <p><strong>Cloudiness:</strong> ${data.clouds.all}%</p>
+                `;
+            } else {
+                alert("Area not found");
+            }
+        } catch (error) {
+            console.log("Error fetching data:", error);
+        }
+    }
+
+    function handleSearch() {
+        const areaName = document.getElementById("areaInput").value;
+        if (areaName) {
+            getWeather(areaName);
+        } else {
+            alert("Please write Area Name");
+        }
+    }
+</script>
+
+         
+
+    </script>
+</body>
+</html>
